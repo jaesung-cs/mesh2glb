@@ -1,0 +1,9 @@
+[submodule "third_party/draco"]
+	path = third_party/draco
+	url = https://github.com/google/draco.git
+[submodule "third_party/assimp"]
+	path = third_party/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "third_party/emsdk"]
+	path = third_party/emsdk
+	url = https://github.com/emscripten-core/emsdk.git
