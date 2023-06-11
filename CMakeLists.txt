@@ -16,5 +16,7 @@ target_link_libraries(mesh2glb PRIVATE assimp)
 
 if (EMSCRIPTEN)
     message(EMSCRIPTEN)
-    target_link_options(mesh2glb PUBLIC --bind)
+    target_link_options(mesh2glb PUBLIC
+        -lembind
+    )
 endif ()
