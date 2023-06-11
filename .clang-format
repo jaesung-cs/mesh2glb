@@ -1,0 +1,6 @@
+---
+BasedOnStyle: Google
+SortIncludes: false
+IndentWidth: 4
+AccessModifierOffset: -4
+...

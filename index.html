@@ -6,6 +6,14 @@
 
 <body>
     <p>Hello World!</p>
+    <script type="text/javascript">
+        var Module = {
+            onRuntimeInitialized: function () {
+                Module.mesh_to_glb("01234");
+            }
+        };
+    </script>
+    <script type="text/javascript" src="embuild/mesh2glb.js"></script>
 </body>
 
 </html>
