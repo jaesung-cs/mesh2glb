@@ -6,14 +6,28 @@
 
 <body>
     <p>Hello World!</p>
+    <input type="file" id="file-upload" />
     <script type="text/javascript">
         var Module = {
             onRuntimeInitialized: function () {
-                console.log(Module);
-                console.log(Module.add(2, 3));
-                console.log(Module.add(3, 5));
+                main();
             }
         };
+
+        function main() {
+            const input = document.getElementById("file-upload");
+            input.onchange = () => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const arrayBuffer = reader.result;
+                    const array = new Uint8Array(arrayBuffer);
+
+                    const glbBuffer = Module.meshToGlb(array);
+                    console.log(glbBuffer);
+                }
+                reader.readAsArrayBuffer(input.files[0]);
+            };
+        }
     </script>
     <script type="text/javascript" src="./dist/mesh2glb.js"></script>
 </body>

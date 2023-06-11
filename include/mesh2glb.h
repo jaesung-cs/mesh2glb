@@ -3,6 +3,6 @@
 
 #include <vector>
 
-void mesh_to_glb(const std::vector<uint8_t> &memory);
+std::vector<uint8_t> mesh_to_glb(const std::vector<uint8_t> &memory);
 
-#endif MESH2GLB_H
+#endif  // MESH2GLB_H

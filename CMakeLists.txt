@@ -8,7 +8,15 @@ project(mesh2glb)
 set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "No werror")
 add_subdirectory(third_party/assimp EXCLUDE_FROM_ALL)
 
-add_executable(mesh2glb src/mesh2glb.cpp)
+set(MESH2GLB_SOURCES
+    src/mesh2glb.cpp
+)
+
+if (EMSCRIPTEN)
+    list(APPEND MESH2GLB_SOURCES src/bind.cpp)
+endif ()
+
+add_executable(mesh2glb ${MESH2GLB_SOURCES})
 
 target_include_directories(mesh2glb PUBLIC include/)
 
@@ -17,6 +25,7 @@ target_link_libraries(mesh2glb PRIVATE assimp)
 if (EMSCRIPTEN)
     target_link_options(mesh2glb PUBLIC
         -lembind
+        -sALLOW_MEMORY_GROWTH
     )
 
     install(FILES
