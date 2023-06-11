@@ -15,8 +15,13 @@ target_include_directories(mesh2glb PUBLIC include/)
 target_link_libraries(mesh2glb PRIVATE assimp)
 
 if (EMSCRIPTEN)
-    message(EMSCRIPTEN)
     target_link_options(mesh2glb PUBLIC
         -lembind
+    )
+
+    install(FILES
+        "$<TARGET_FILE_DIR:mesh2glb>/mesh2glb.js"
+        "$<TARGET_FILE_DIR:mesh2glb>/mesh2glb.wasm"
+        DESTINATION ${CMAKE_SOURCE_DIR}/dist
     )
 endif ()

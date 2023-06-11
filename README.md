@@ -19,4 +19,5 @@ $ source ./third_party/emsdk/emsdk_env.sh
     ```console
     $ emcmake cmake . -B embuild
     $ cmake --build embuild --config Release -j
+    $ cmake --install embuild --config Release
     ```
