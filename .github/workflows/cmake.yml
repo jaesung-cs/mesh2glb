@@ -27,7 +27,7 @@ jobs:
         ./third_party/emsdk/emsdk activate latest
         source ./third_party/emsdk/emsdk_env.sh
         emcmake cmake . -B ${{github.workspace}}/embuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-        cmake --build ${{github.workspace}}/embuild --config ${{env.BUILD_TYPE}} -j
+        cmake --build ${{github.workspace}}/embuild --config ${{env.BUILD_TYPE}}
         cmake --install embuild --config ${{env.BUILD_TYPE}}
 
   deploy:
