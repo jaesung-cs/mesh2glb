@@ -7,14 +7,10 @@ on:
     branches: [ "develop" ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
   build:
-    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
-    # You can convert this to a matrix build if you need cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
 
     steps:
@@ -26,10 +22,32 @@ jobs:
       run: |
         ./third_party/emsdk/emsdk install latest
 
-    - name: Configure CMake
+    - name: Build
       run: |
         ./third_party/emsdk/emsdk activate latest
         source ./third_party/emsdk/emsdk_env.sh
         emcmake cmake . -B ${{github.workspace}}/embuild -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-        cmake --build ${{github.workspace}}/embuild --config ${{env.BUILD_TYPE}}
+        cmake --build ${{github.workspace}}/embuild --config ${{env.BUILD_TYPE}} -j
         cmake --install embuild --config ${{env.BUILD_TYPE}}
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}/develop
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
