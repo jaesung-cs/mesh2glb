@@ -18,7 +18,7 @@ jobs:
 
     environment:
       name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}develop/
+      url: ${{steps.deployment.outputs.page_url}}
 
     runs-on: ubuntu-latest
 
@@ -50,3 +50,7 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v2
+
+    - name: Override page_url
+      id: change-page-url
+      run: echo "new_page_url=${{ steps.deployment.outputs.page_url }}develop/" >> $GITHUB_OUTPUT
