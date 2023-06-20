@@ -6,11 +6,18 @@ on:
   pull_request:
     branches: [ "develop" ]
 
-env:
-  BUILD_TYPE: Release
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
+    env:
+      BUILD_TYPE: Release
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}develop/
+
     runs-on: ubuntu-latest
 
     steps:
@@ -30,24 +37,8 @@ jobs:
         cmake --build ${{github.workspace}}/embuild --config ${{env.BUILD_TYPE}}
         cmake --install embuild --config ${{env.BUILD_TYPE}}
 
-  deploy:
-    needs: build
-
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}develop/
-
-    runs-on: ubuntu-latest
-    steps:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
-        with:
-          path: '.'
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
