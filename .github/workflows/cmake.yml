@@ -16,9 +16,11 @@ jobs:
     env:
       BUILD_TYPE: Release
 
+    # Workaround to deploy different url path.
+    # See https://github.com/orgs/community/discussions/37267
     environment:
       name: github-pages
-      url: ${{steps.deployment.outputs.page_url}}
+      url: ${{steps.change-page-url.outputs.new_page_url}}
 
     runs-on: ubuntu-latest
 
