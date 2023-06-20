@@ -2,4 +2,6 @@
 
 /build/
 /embuild/
-/dist/
+
+/dist/mesh2glb.js
+/dist/mesh2glb.wasm
