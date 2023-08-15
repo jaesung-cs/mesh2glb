@@ -4,8 +4,6 @@
 
 namespace {
 
-int add(int x, int y) { return x + y; }
-
 auto meshToGlb(std::string data) {
     std::vector<uint8_t> memory(data.begin(), data.end());
 
@@ -17,7 +15,4 @@ auto meshToGlb(std::string data) {
 
 }  // namespace
 
-EMSCRIPTEN_BINDINGS(mesh2glb) {
-    emscripten::function("add", &add);
-    emscripten::function("meshToGlb", &meshToGlb);
-}
+EMSCRIPTEN_BINDINGS(mesh2glb) { emscripten::function("meshToGlb", &meshToGlb); }
