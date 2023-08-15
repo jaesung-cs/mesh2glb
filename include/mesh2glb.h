@@ -1,8 +1,8 @@
 #ifndef MESH2GLB_H
 #define MESH2GLB_H
 
-#include <vector>
+#include <string>
 
-std::vector<uint8_t> mesh_to_glb(const std::vector<uint8_t> &memory);
+std::string mesh_to_glb(const std::string& memory);
 
 #endif  // MESH2GLB_H

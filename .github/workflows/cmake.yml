@@ -16,12 +16,6 @@ jobs:
     env:
       BUILD_TYPE: Release
 
-    # Workaround to deploy different url path.
-    # See https://github.com/orgs/community/discussions/37267
-    environment:
-      name: github-pages
-      url: ${{steps.change-page-url.outputs.new_page_url}}
-
     runs-on: ubuntu-latest
 
     steps:
@@ -52,7 +46,3 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v2
-
-    - name: Override page_url
-      id: change-page-url
-      run: echo "new_page_url=${{ steps.deployment.outputs.page_url }}develop/" >> $GITHUB_OUTPUT

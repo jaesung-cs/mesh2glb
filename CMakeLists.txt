@@ -49,13 +49,12 @@ if (EMSCRIPTEN)
     target_compile_options(mesh2glb PUBLIC
         -O3
     )
-    
+
     target_link_options(mesh2glb PUBLIC
         -lembind
         -sMODULARIZE -sEXPORT_NAME="Mesh2Glb" -sEXPORT_ES6
         -sASSERTIONS=0  # No assertions
-        -sINITIAL_MEMORY=134217728  # 128MB, increase this when faster speed is needed.
-        -sALLOW_MEMORY_GROWTH  # Disable this when faster speed is needed.
+        -sALLOW_MEMORY_GROWTH
         -O3
     )
 

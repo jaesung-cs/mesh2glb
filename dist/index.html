@@ -24,7 +24,8 @@
     {
         "imports": {
             "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/"
+            "three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/",
+            "mesh2glb": "./mesh2glb.js"
         }
     }
     </script>
@@ -37,7 +38,7 @@
         import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
         import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 
-        import Mesh2Glb from "./mesh2glb.js";
+        import Mesh2Glb from "mesh2glb";
         const Module = await Mesh2Glb();
 
         const rendererDiv = document.getElementsByClassName("renderer").item(0);

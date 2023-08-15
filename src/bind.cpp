@@ -4,13 +4,11 @@
 
 namespace {
 
-auto meshToGlb(std::string data) {
-    std::vector<uint8_t> memory(data.begin(), data.end());
+auto meshToGlb(const std::string& data) {
+    auto result = mesh_to_glb(data);
 
-    auto result = mesh_to_glb(memory);
-
-    return emscripten::val(
-        emscripten::typed_memory_view(result.size(), result.data()));
+    return emscripten::val(emscripten::typed_memory_view<uint8_t>(
+        result.size(), reinterpret_cast<uint8_t*>(result.data())));
 }
 
 }  // namespace
