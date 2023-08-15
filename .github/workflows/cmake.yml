@@ -1,5 +1,18 @@
 name: CMake
 
+on:
+  workflow_dispatch:
+    inputs:
+      buildType:
+        description: "Build Type"
+        required: true
+        default: "Release"
+        type: choice
+        options:
+        - Debug
+        - RelWithDebInfo
+        - Release
+
 permissions:
   contents: read
   pages: write
@@ -8,7 +21,7 @@ permissions:
 jobs:
   build:
     env:
-      BUILD_TYPE: Release
+      BUILD_TYPE: ${{ inputs.buildType }}
 
     runs-on: ubuntu-latest
 
