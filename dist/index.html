@@ -2,53 +2,117 @@
 
 <head>
     <title>Mesh to GLB</title>
+    <style>
+        .renderer {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
-    <p>
-        Select a mesh file.
-    </p>
-    <input type="file" id="file-upload" />
-    <script type="text/javascript">
-        var Module = {
-            onRuntimeInitialized: function () {
-                main();
-            }
-        };
+    <div>
+        <p>
+            Select a mesh file.
+        </p>
+        <input type="file" id="file-upload" />
+    </div>
+    <div class="renderer"></div>
 
-        function main() {
-            const input = document.getElementById("file-upload");
-            input.onchange = () => {
-                const filename = input.files[0].name;
-                const outputFilename = filename.substr(0, filename.lastIndexOf(".")) + ".glb";
-
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const arrayBuffer = reader.result;
-                    const array = new Uint8Array(arrayBuffer);
-
-                    try {
-                        const glbBuffer = Module.meshToGlb(array);
-
-                        const blob = new Blob([glbBuffer], {
-                            type: "model/gltf-binary",
-                        });
-                        const url = window.URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.textContent = `Download ${outputFilename}`;
-                        a.href = url;
-                        a.download = outputFilename;
-                        document.body.appendChild(a);
-                    } catch (error) {
-                        console.error("error occurred, glb not converted.")
-                        console.error("reason:", error);
-                    }
-                };
-                reader.readAsArrayBuffer(input.files[0]);
-            };
+    <!-- Import THREE.js r155 -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.155.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.155.0/examples/jsm/"
         }
+    }
     </script>
-    <script type="text/javascript" src="./mesh2glb.js"></script>
+
+    <script type="module">
+        import * as THREE from "three";
+
+        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+        import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+        import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+        import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+
+        import Mesh2Glb from "./mesh2glb.js";
+        const Module = await Mesh2Glb();
+
+        const rendererDiv = document.getElementsByClassName("renderer").item(0);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        rendererDiv.appendChild(renderer.domElement);
+
+        const scene = new THREE.Scene();
+
+        scene.background = new THREE.Color("#808080");
+
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        scene.environment = pmremGenerator.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+        pmremGenerator.dispose();
+
+        const axis = new THREE.AxesHelper();
+        scene.add(axis);
+
+        const aspect = window.innerWidth / window.innerHeight;
+        const camera = new THREE.PerspectiveCamera(60., aspect, 0.01, 100.);
+        camera.position.set(1, 1, 1);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.update();
+
+        const resize = () => {
+            const aspect = window.innerWidth / window.innerHeight;
+            camera.aspect = aspect;
+            camera.updateProjectionMatrix();
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        };
+        window.addEventListener("resize", resize);
+        resize();
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+
+            controls.update();
+            renderer.render(scene, camera);
+        };
+        requestAnimationFrame(animate);
+
+        const input = document.getElementById("file-upload");
+        input.onchange = () => {
+            const filename = input.files[0].name;
+            const outputFilename = filename.substr(0, filename.lastIndexOf(".")) + ".glb";
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const arrayBuffer = reader.result;
+                const array = new Uint8Array(arrayBuffer);
+
+                try {
+                    const glbBuffer = Module.meshToGlb(array);
+
+                    const blob = new Blob([glbBuffer], { type: "model/gltf-binary" });
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.textContent = `Download ${outputFilename}`;
+                    a.href = url;
+                    a.download = outputFilename;
+                    document.body.appendChild(a);
+
+                    // Load binary to gltf scene with THREE.GLTFLoader
+                    const loader = new GLTFLoader();
+                    loader.load(url, (gltf) => {
+                        scene.add(gltf.scene);
+                    });
+                } catch (error) {
+                    console.error("error occurred, glb not converted.")
+                    console.error("reason:", error);
+                }
+            };
+            reader.readAsArrayBuffer(input.files[0]);
+        };
+    </script>
 </body>
 
 </html>
